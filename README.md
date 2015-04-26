@@ -1,13 +1,14 @@
 # Graphical Presentation of Information Using Racket and Its Libraries
 ##Lapsus OPL S15 Final Project
+##Authors: 
 ###Alex Nevers and Merve Tuccar
 
 ##Overview
-This project uses multiple Racket libraries to present an aesthetically pleasing and informative presentation on military grade A.I. 
+This project uses multiple Racket libraries to present an aesthetically pleasing and informative presentation on military grade A.I. Slideshow, sound and pict Racket libraties are used in this project. 
 
 ![alt text](http://i.imgur.com/Go3FJHt.png "Logo Title Text 1")
 
-##Concepts Demnstrated
+##Concepts Demonstrated
 (FILL IN HERE)
 
 ##External Technologies
@@ -41,10 +42,11 @@ The below code is the main method used throught the slideshow for laying out and
 ####Merve
 (FILL IN HERE)
 
-####Working Notes
+
+##Additional Remarks
 * Song curently does not stop after slideshow ends. The only way to kill it is to close Dr.Racket. Comment out (play-sound) line if you dont want to deal with it. Working on a fix.
 * Images in repo must be in same folder as code to work. Backup copy of images canbe download from dropbox link below-- just move code to the iamge folder before running.
 * Slides are timed to change after twenty seconds. If you attempt to manually navigate the slideshow, slides will appear out of order.
 
-##Executing
+##How to Download and Run
 (FILL IN HERE)
