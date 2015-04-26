@@ -1,5 +1,3 @@
-#lang slideshow
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;Graphical-Presentation-of-Information-Using-Racket-and-Its-Libraries
 
@@ -40,105 +38,228 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;notes to do->>
-;;add animation
-;;add more styling
-;;add pictures
+#lang slideshow
+(require slideshow/play)
+(require racket/gui)
+(require pict images/icons/control images/icons/style)
 
 (current-font-size 32)
-(current-main-font "Verdana")
-(current-title-color "blue")
+(current-main-font 'swiss)
+
+(current-title-color "White")
+(current-titlet (lambda (s)
+  (colorize (text s (current-main-font) 45)
+            (current-title-color))))
+            
+            
+ 
+ 
+(set-page-numbers-visible! #f)
+
+(define background-image (make-parameter #f))
+(define (background-image-pict)
+   (define bg (background-image))
+   (inset (scale bg (/ 1024 (pict-width bg)) (/ 768 (pict-height bg)))
+          (- margin)))
+
+
+(define slide-number (make-parameter #f))
+(define (add1-slide-number) (slide-number (add1 (slide-number))))
+(define format-slide-number
+   (make-parameter
+    (lambda (num)
+      (scale (rt (number->string (slide-number))) 3/5))))
+
+
+(define (add-slide bg-pct pct)
+   (refocus (ct-superimpose bg-pct pct) bg-pct))
+
+(define (add-slide-number pct)
+   (refocus
+    (rb-superimpose pct ((format-slide-number) (slide-number)))
+    pct))
+
+(current-slide-assembler
+  (let ([orig  (current-slide-assembler)])
+    (lambda (title sep body)
+      (let* ([pct  (if (background-image)
+                       (background-image-pict)
+                       (inset (blank 1024 768) (- margin)))]
+             [pct  (add-slide pct (orig title sep body))]
+             [pct  (if (slide-number) (add-slide-number pct) pct)])
+        pct))))
+
+(background-image (bitmap "wallpaperg2.jpg"))
+;;(play-sound "T2maintheme.wav" #t)
 
 (define (run)
 
-(slide
+(slide 
  #:title "CYBERDYNE SYSTEMS PRESENTS"
- #:timeout 20 
- (t "S k y n e t: The Future of A.I."))
+ #:timeout 10
+ (bitmap "Cyberdyne_logo_OLD.jpg" )
+ (t " ")
+ (tt "S k y n e t: The Future of A.I."))
+
+(current-font-size 34)
 
 (slide
  #:title "CREATING THE FUTURE OF TECHNOLOGY"
- #:timeout 20 
- (para "CYBERDYNE SYSTEMS has been working with the American people, for the American people, for over a decade. Within this decade we've pioneered new breakthroughs in")
- (item "Artificial Intelligence")
- 'next
- (item "Neural Network Processors")
- 'next
- (item "Advanced Robotic Systems for Medicine")
- 'next
- (item "Consumer Products")
- 'next
- (item "Defense"))
+ #:timeout 15 #:gap-size 12
+ (para #:width 900 #:fill? #t (tt "CYBERDYNE SYSTEMS") "has been working with the American people, for the American people, for over a decade. Within this decade we've pioneered new breakthroughs in:")
+
+ (t " ")
+ 
+ (lt-superimpose 
+   (hc-append
+              (para #:align 'left #:fill? #t #:width 470 "         ")
+              (bitmap  "cyberdyne_behind_the_scenes.jpg")) 
+  
+   (vl-append (item #:bullet (bitmap (arrowhead 20 0)) "Artificial Intelligence") 
+              (vl-append 
+                         (vl-append (item #:bullet (bitmap (arrowhead 20 0)) "Neural Network Processes")
+                                    (item #:bullet (bitmap (arrowhead 20 0)) #:width 470 "Advanced Robotics for Medicine"))
+                         (vl-append (item #:bullet (bitmap (arrowhead 20 0)) "Consumer Products")
+                                    (item  #:bullet (bitmap (arrowhead 20 0)) "Defense"))))))
+
+(current-font-size 30)
 
 (slide
  #:title "WHAT LIES AHEAD"
- #:timeout 20 
- (para "Our greatest challenge lies ahead. ")
- (para "Or rather... above. ")
- (para "Six hundred miles above, in geosynchronous earth orbit.  Today, these CYBERDYNE satellites protect us from enemy attack.  But soon, they'll go even farther. Imagine every computer on earth... Every television... Every telephone... and eventually, every living person... united.  In the ultimate global network. ")
- (para "You've heard of the information highway?")
- 'next
- (para "Welcome to the information skyway."))
+ #:timeout 15
+ #:gap-size 19
+ 
+ (lt-superimpose 
+   (hc-append 
+             (para #:align 'left #:fill? #t #:width 550 "         ")
+             (bitmap "T23d-skynetsatellite-poster.png"))
+             
+    (vl-append (para #:align 'left #:fill? #t #:width 540 "Our greatest challenge lies ahead. ")
+       (vl-append 
+                  (vl-append (para #:align 'left #:fill? #t #:width 540 "Or rather... above. ")
+                             (vl-append (t " ")
+                                        (para  #:align 'left #:fill? #t #:width 540 "Six hundred miles above, in geosynchronous earth orbit. Today, these" (tt "CYBERDYNE") "satellites protect us from enemy attack. But soon, they'll go even farther. Imagine every computer on earth, every television, every telephone, and eventually, every living person... united. In the ultimate global network.")))
+                  (vl-append (t " ")
+                             (vl-append (para #:align 'left #:fill? #t #:width 540 "You've heard of the information highway?")
+                                        (para  #:align 'left #:fill? #t #:width 540 "Welcome to the information" (it "skyway."))))))))
+
+  
 
 (slide
  #:title "INTRODUCING: SKYNET"
- #:timeout 20 
- (t "This is the future of communication.")
- 'next
- (t "The future of National Defense.")
- 'next
- (t "The future of a new global society.")
- 'next
- (t "Ladies and Gentlemen...")
- 'next
- (t "This is SKYNET."))
+ #:timeout 15  #:gap-size 19
+ 
+ (lt-superimpose 
+   (hc-append 
+             (para #:align 'left #:fill? #t #:width 550 "         ")
+             (bitmap "T23d-skynetsatellite-poster.png"))
+             
+    (vl-append (para #:align 'left #:fill? #t #:width 540 "Our greatest challenge lies ahead. ")
+               (vl-append 
+                          (vl-append (para #:align 'left #:fill? #t #:width 540 "Or rather... above. ")
+                                     (vl-append (t " ")
+                                                (para  #:align 'left #:fill? #t #:width 540 "Six hundred miles above, in geosynchronous earth orbit. Today, these" (tt "CYBERDYNE") "satellites protect us from enemy attack. But soon, they'll go even farther. Imagine every computer on earth, every television, every telephone, and eventually, every living person... united. In the ultimate global network.")))
+                          (vl-append (t " ")
+                                      (vl-append (para #:align 'left #:fill? #t #:width 540 "You've heard of the information highway?")
+                                                 (para  #:align 'left #:fill? #t #:width 540 "Welcome to the information" (it "skyway."))))))))
+
+  
 
 (slide
+ #:title "INTRODUCING: YOUR FUTURE"
+ #:timeout 10  #:gap-size 10
+
+ (t "This is the future of communication.")
+ (t "The future of National Defense.")
+ (t "The future of a new global society.")
+ (t "Ladies and Gentlemen...")
+ (t "This is") (tt "SKYNET.")
+ (bitmap "skynet-8.gif"))
+
+ (current-font-size 30)
+  
+(slide
  #:title "WHAT IS SKYNET?"
- #:timeout 20 
- (para "SKYNET is:")
- 'next
- (item "The world's first Automated Defense Network, processing information at ninety teraflops. ")
- 'next
- (item "The controlling force behind all CYBERDYNE satellites. SKYNET pools data from satellites, develops tactics and coordinates attacks.")
- 'next
- (item "The control over everything which contains a Cyberdyne Systems CPU. "))
+ #:timeout 15 
+(para (tt "SKYNET") "is:")
+
+ (hc-append 
+            (bitmap "satellite.jpg")
+                
+            (vl-append (item #:bullet (bitmap (arrowhead 20 0)) #:align 'left #:fill? #t #:width 500 "The world's first Automated Defense Network, processing information at ninety teraflops.")
+                       (vl-append (item #:bullet (bitmap (arrowhead 20 0)) #:align 'left #:fill? #t #:width 500 "The controlling force behind all" (tt "CYBERDYNE") "satellites." (tt "SKYNET") "pools data from satellites, develops tactics and coordinates attacks.")
+                                  (item #:bullet (bitmap (arrowhead 20 0)) #:align 'left #:fill? #t #:width 500 "The control over everything which contains a" (tt "CYBERDYNE SYSTEMS") "CPU."))
+                  
+ )))
 
 (slide
  #:title "SAFETY FROM THE SKIES"
- #:timeout 20 
- (para "With the entirety of CYNDERDYNE’s satellites at it’s fingertips, SKYNET has complete control of the skies. With this power, SKYNET can detect aerial attacks from enemy countries the instant they are launched.")
- (para "SKYNET can can calculate exact trajectory paths from space. These paths can then be ray traced onto precise maps for strategic use by our world leaders."))
+ #:timeout 15 
+ (para #:width 900 #:fill? #t "With the entirety of" (tt "CYNDERDYNE’s") "satellites at it’s fingertips," (tt "SKYNET") "has complete control of the skies. With this power," (tt "SKYNET") "can detect aerial attacks from enemy countries the instant they are launched.")
+
+ (hc-append (bitmap "map_targets.jpg")
+             (hc-append (para #:width 20  " ")
+                        (para #:align 'left #:fill? #t #:width 300 "The" (tt "SKYNET") "can can calculate exact trajectory paths from space. These paths can then be ray traced onto precise maps for strategic use by our world leaders."))))
+
 
 (slide
  #:title "IMPENETRABLE SUBTERRANEAN CORE"
- #:timeout 20 
- (para "The SKYNET base is located in Cheyenne Mountain, Colorado, the world's most heavily armored and defended mountain. Hollowed out, reinforced and armored, Cheyenne Mountain is capable of withstanding a direct hit from a nuclear missile. ")
- )
+ #:timeout 15
+ (para #:width 900 "The" (tt "SKYNET") "base is located in Cheyenne Mountain, Colorado, the world's most heavily armored and defended mountain. Hollowed out, reinforced and armored, Cheyenne Mountain is capable of withstanding a direct hit from a nuclear missile. ")
+ (t " ")
+ (bitmap "T23d-skynet-core.png"))
 
 (slide
  #:title "STATE OF THE ART A.I."
- #:timeout 20 
- (para "CYBERDYNE has compiled our most intelligent and innovative programmers to work on SKYNET. After years of work, they have created the perfect, interconnected network that can think for itself.")
- (para "SKYNET can learn at a geometric rate. Though it is not intelligent enough to be self-aware, it is the ultimate processor and relies on human input for decisions."))
-
+ #:timeout 15 
+(lt-superimpose 
+   (hc-append
+              (para #:align 'left #:fill? #t #:width 470 "         ")
+              (vl-append (vl-append (t " ") (t " ")) (bitmap  "skynet-dos.png"))) 
+  
+   (vl-append (para #:align 'left #:fill? #t #:width 450 (tt "CYBERDYNE") "has compiled our most intelligent and innovative programmers to work on" (tt "SKYNET.") "After years of work, they have created the perfect, interconnected network that can think for itself.")
+              (para #:align 'left #:fill? #t #:width 450 (tt "SKYNET") "can learn at a geometric rate. Though it is not intelligent enough to be self-aware, it is the ultimate processor and relies on human input for decisions.")
+ )))
+ 
+ 
 (slide
  #:title "OPERATIONS BEGIN SOON"
- #:timeout 20 
- (para "With CYBERDYNE’s innovation and tech, SKYNET is set to be the safety net for the world. Global conflict will stalemate in the face of this technological giant, ever-watching from the skies.")
- (t " ")
- (t " ")
- (t "SKYNET goes online on August 4, 1997.")
- (t "Your future is in our trusted hands." ))
+ #:timeout 15 
+(para #:width 900 #:align 'center "With" (tt "CYBERDYNE’s") "innovation and tech," (tt "SKYNET") "is set to be the safety net for the world. Global conflict will stalemate in the face of this technological giant, ever-watching from the skies.")
+                         
+ (lt-superimpose 
+                (hc-append
+                          (para #:align 'left #:fill? #t #:width 470 "         ")
+                          (bitmap  "skynet-8.gif"))
+                
+                 (vl-append (vl-append (t " ")
+                                       (t " "))
+                            (vl-append (para #:align 'center #:width 470(tt "SKYNET") "goes online on August 4, 1997.
+                             ")
+                                       (para #:align 'center #:width 470 "Your future is in our trusted hands." )))))
+ 
+  (current-font-size 28)
 
 (slide
-#:timeout 20 
+#:timeout 10
  (t "Making the future safer and friendlier... for everyone.")
- (t "© 1997 CYBERDYNE SYSTEMS ALL RIGHTS RESERVED")
- (t "18144 El Camino Real, Sunnyvale, California")
+ (hline 1000 5)
+ 
+ (lt-superimpose
+                (hc-append
+                           (para #:align 'left #:fill? #t #:width 450 "         ")
+                           (bitmap  "cyberdyne_building_front.jpg"))
+             
+                (vl-append (vl-append (t " ")
+                                      (para #:width 450 #:align 'left "© 1997" (tt "CYBERDYNE SYSTEMS") "      ALL RIGHTS RESERVED
+                                       "))
+                           (vl-append (t " ")
+                                      (para #:width 450 #:align 'left "18144 El Camino Real, Sunnyvale, California")  )))
+ 
+ (hline 1000 5)
+  (t " ")
  (t "https://www.linkedin.com/company/cyberdyne-systems-corporation"))
+  
+  (run))
 
- (run))
- 
- 
- 
+(run)
